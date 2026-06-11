@@ -48,8 +48,8 @@ To complete this assignment and be eligible for the prizes, you must complete th
 
 To ensure your entry is tracked and reviewed by the evaluation panel, you **MUST** tag the following accounts in your LinkedIn post:
 
-* **[Yeshwanth L M](https://www.linkedin.com/in/yeshwanth-l-m/)** (Club Captain)
-* **[Yashwanth R](https://www.linkedin.com/in/ryashu/)** 
+* **[Yeshwanth L M](https://www.linkedin.com/in/yeshwanth-l-m/)** (Speakern)
+* **[Yashwanth R](https://www.linkedin.com/in/ryashu/)** (Club Captain)
 * **[AWS User Group Mysuru](https://www.linkedin.com/company/awsugmys/)**
 * **[VVCE AWS Student Builder Club](https://www.linkedin.com/company/aws-student-builder-group/)**
 
