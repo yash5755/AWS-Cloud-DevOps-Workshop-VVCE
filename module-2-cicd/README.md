@@ -20,9 +20,73 @@
 
 ---
 
-## 🔒 Step-by-step instructions will be shared by the presenter during the session.
+## 🔒 Step-by-step instructions:
 
-In the meantime, fork this repository to your GitHub account so you're ready to go.
+### Step 1: Add GitHub Secrets
+In your GitHub repo → **Settings → Secrets and variables → Actions → New repository secret**
+
+Add the following 4 secrets:
+
+| Secret Name     | Value                                                        |
+|-----------------|--------------------------------------------------------------|
+| `EC2_SSH_KEY`   | The full contents of your `vvce-key.pem` file               |
+| `HOST_DNS`      | Your EC2 instance's Public IPv4 address (e.g. `3.x.x.x`)   |
+| `USERNAME`      | `ubuntu` (default user for Ubuntu AMI)                       |
+| `TARGET_DIR`    | `/home/ubuntu` (files will be copied here first)            |
+
+> **How to get the `.pem` content:** `cat vvce-key.pem` — copy everything including the `-----BEGIN...` and `-----END...` lines.
+
+### Step 2: Create the GitHub Actions Workflow
+Create the file `.github/workflows/deploy.yml` in your repo with this content:
+
+```yaml
+name: Deploy to EC2
+
+# Trigger only on pushes to the main branch
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Deploy to EC2
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Copy files to EC2 via SSH
+        uses: easingthemes/ssh-deploy@main
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
+          REMOTE_HOST: ${{ secrets.HOST_DNS }}
+          REMOTE_USER: ${{ secrets.USERNAME }}
+          TARGET: ${{ secrets.TARGET_DIR }}
+
+      - name: Install Apache and move files
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST_DNS }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            sudo apt-get update -y
+            sudo apt-get install -y apache2
+            sudo systemctl start apache2
+            sudo systemctl enable apache2
+            sudo cp /home/ubuntu/index.html /var/www/html/index.html
+            sudo cp /home/ubuntu/style.css /var/www/html/style.css
+```
+
+### Step 3: Test the Pipeline
+1. Make a small change to `index.html` (e.g. change the name or add a skill)
+2. Commit and push to `main`
+3. Go to your repo → **Actions tab** → watch the workflow run live
+4. Once it turns green, refresh `http://<PUBLIC_IP>` — your change is live
+
+> 💡 **Key point for students:** You didn't SSH into anything. The code change went live automatically. That's the power of CI/CD.
 
 ---
 
