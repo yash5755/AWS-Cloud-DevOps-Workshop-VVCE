@@ -64,6 +64,7 @@ jobs:
           REMOTE_HOST: ${{ secrets.HOST_DNS }}
           REMOTE_USER: ${{ secrets.USERNAME }}
           TARGET: ${{ secrets.TARGET_DIR }}
+          SOURCE: "module-2-cicd/"
 
       - name: Install Apache and move files
         uses: appleboy/ssh-action@master
@@ -76,8 +77,9 @@ jobs:
             sudo apt-get install -y apache2
             sudo systemctl start apache2
             sudo systemctl enable apache2
-            sudo cp /home/ubuntu/index.html /var/www/html/index.html
-            sudo cp /home/ubuntu/style.css /var/www/html/style.css
+            sudo cp ${{ secrets.TARGET_DIR }}/index.html /var/www/html/index.html
+            sudo cp ${{ secrets.TARGET_DIR }}/style.css /var/www/html/style.css
+
 ```
 
 ### Step 3: Test the Pipeline
